@@ -83,5 +83,40 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 
+public:
+	//effect stuffs
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
+		bool SpeedEffect;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
+		bool AttackUpEffect;
+
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void IncreaseHealth();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void IncreaseSpeed();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void IncreaseDamage();
+
+	//player stats
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
+		float MovementSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
+		float AttackDamage;
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
+		float PlayerHealth;*/
+
+	//player default stats
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
+		float DefaultDamage = 25;
+
+	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefStats)
+		float MaxHealth = 100;*/
 };
 

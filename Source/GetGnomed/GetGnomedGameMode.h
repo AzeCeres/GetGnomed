@@ -13,6 +13,23 @@ class AGetGnomedGameMode : public AGameModeBase
 
 public:
 	AGetGnomedGameMode();
+
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
+		bool ControllerWinBool;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
+		bool GameState;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
+		float GameScore;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
+		float GameTimeScore;
+
+private:
+	void TriggerWin();
 };
 
 

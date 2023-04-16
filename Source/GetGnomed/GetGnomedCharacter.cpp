@@ -16,7 +16,11 @@ AGetGnomedCharacter::AGetGnomedCharacter()
 {
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
-	
+
+	//PlayerHealth = MaxHealth; Working on health pickup and realized im not really supposed to be implementing health, leaving this here though...
+	MovementSpeed = 1;
+	AttackDamage = DefaultDamage;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 		
@@ -72,6 +76,35 @@ void AGetGnomedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	}
 }
 
+void AGetGnomedCharacter::IncreaseHealth()
+{
+	/*if (PlayerHealth<MaxHealth) {
+		//health += 25;
+		//call destructor for health pickup item
+	}*/
+}
+
+void AGetGnomedCharacter::IncreaseSpeed()
+{
+	if (!SpeedEffect){
+		MovementSpeed = 1.5;
+		//wait for set time
+		MovementSpeed = 1;
+		//Call destructor for pickup item
+	}
+}
+
+void AGetGnomedCharacter::IncreaseDamage()
+{
+	if (!AttackUpEffect)
+	{
+		AttackDamage *= 2;
+		//wait for set time
+		AttackDamage = DefaultDamage;
+		////Call destructor for pickup item
+	}
+}
+
 
 void AGetGnomedCharacter::Move(const FInputActionValue& Value)
 {
@@ -81,8 +114,8 @@ void AGetGnomedCharacter::Move(const FInputActionValue& Value)
 	if (Controller != nullptr)
 	{
 		// add movement 
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
-		AddMovementInput(GetActorRightVector(), MovementVector.X);
+		AddMovementInput(GetActorForwardVector(), MovementVector.Y/* *MovementSpeed ??*/);
+		AddMovementInput(GetActorRightVector(), MovementVector.X/* *MovementSpeed ??*/);
 	}
 }
 

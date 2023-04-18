@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
+// Edited and added onto by Julian
 #include "GetGnomedCharacter.h"
 #include "GetGnomedProjectile.h"
 #include "Animation/AnimInstance.h"
@@ -50,7 +50,15 @@ void AGetGnomedCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+}
 
+void AGetGnomedCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	invTimer += DeltaSeconds;
+	isInv = invTimer < invBuffer ? true : false;
+	if (health <=0)
+		isDead = true;
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -70,6 +78,22 @@ void AGetGnomedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGetGnomedCharacter::Look);
 	}
+}
+
+int AGetGnomedCharacter::GetHealth(){
+	return health;
+}
+
+void AGetGnomedCharacter::SetHealth(int newHealth){
+	health = newHealth;
+}
+
+void AGetGnomedCharacter::TakeDamage(int damage)
+{
+	if (isInv)
+		return;
+	health -= damage;
+	invTimer=0;
 }
 
 

@@ -72,3 +72,9 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+*.old
+*.lc
+*.response
+*.response
+Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini
+.idea/.idea.GetGnomed/.idea/vcs.xml

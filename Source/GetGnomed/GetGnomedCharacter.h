@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
+// Edited and added onto by Julian
 #pragma once
 
 #include "CoreMinimal.h"
@@ -45,7 +45,7 @@ public:
 
 protected:
 	virtual void BeginPlay();
-
+	virtual void Tick(float DeltaSeconds) override;
 public:
 		
 	/** Look Input Action */
@@ -82,6 +82,19 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	int maxHealth{5};
+	int health{5};
 
+	bool isDead{false};
+	int GetHealth();
+	void SetHealth(int newHealth);
+	UFUNCTION(BlueprintCallable, Category = Health)
+	void TakeDamage(int damage);
+
+private:
+	float invTimer{0};
+	float invBuffer{.5};
+	bool isInv{false};
+	
 };
 

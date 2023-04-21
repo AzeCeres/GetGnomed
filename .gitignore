@@ -78,3 +78,4 @@ DerivedDataCache/*
 *.response
 Plugins/Developer/RiderLink/Intermediate/FileSystemMappings.ini
 .idea/.idea.GetGnomed/.idea/vcs.xml
+*.response

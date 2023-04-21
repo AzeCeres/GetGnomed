@@ -23,11 +23,13 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	//UPROPERTY(EditAnywhere) The TArray is empty, and isn't serializeable. todo make it editable from blueprints
-	TArray<AEnemySpawnPoint>* SpawnPoints;
+	UPROPERTY(EditAnywhere, Category=ChangeMe)
+	TArray<AActor*> SpawnPoints;
 	void SpawnWave(int NrOfEnemies, float TimeBetweenSpawns);
+	UPROPERTY(EditAnywhere, Category=ChangeMe)
 	bool isTimeBetweenIndividualSpawns;
 private:
+	int nrOfPoints{3};
 	int EnemiesToSpawn{0};
 	void SpawnEnemy(int IndexOfSpawnPoints);
 	float spawnBuffer{0};

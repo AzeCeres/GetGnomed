@@ -1,20 +1,20 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "WaveSpawner.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWaveSpawner::AWaveSpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
 // Called when the game starts or when spawned
 void AWaveSpawner::BeginPlay()
 {
+	SpawnPoints.Init(nullptr,3);
 	Super::BeginPlay();
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawnPoint::StaticClass(), SpawnPoints);
 	SpawnWave(100,5);
 }
 
@@ -23,14 +23,14 @@ void AWaveSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	spawnTimer+=DeltaTime;
-	if (spawnTimer < spawnBuffer && EnemiesToSpawn <= 0) return;
+	if (spawnTimer < spawnBuffer || EnemiesToSpawn <= 0) return;
 	
 	if (isTimeBetweenIndividualSpawns)
 	{
 		SpawnEnemy(currentSpawnPointIndex);
 		EnemiesToSpawn-=1;
 		currentSpawnPointIndex +=1;
-		if (currentSpawnPointIndex == SpawnPoints->Num())
+		if (currentSpawnPointIndex == SpawnPoints.Num())
 		{
 			currentSpawnPointIndex=0;
 		}
@@ -38,11 +38,11 @@ void AWaveSpawner::Tick(float DeltaTime)
 	}
 	else
 	{
-		for (int i = 0; i < SpawnPoints->Num(); ++i)
+		for (int i = 0; i < SpawnPoints.Num(); ++i)
 		{
 			if (EnemiesToSpawn<=0)
 				break;
-			SpawnPoints[i].GetData()->SpawnEnemy();
+			SpawnEnemy(i);
 			EnemiesToSpawn-=1;
 		}
 		spawnTimer=0;
@@ -58,7 +58,7 @@ void AWaveSpawner::SpawnWave(int NrOfEnemies, float TimeBetweenSpawns)
 
 void AWaveSpawner::SpawnEnemy(int IndexOfSpawnPoints)
 {
-	SpawnPoints[currentSpawnPointIndex].GetData()->SpawnEnemy();
+	Cast<AEnemySpawnPoint>(SpawnPoints[IndexOfSpawnPoints])->SpawnEnemy();
 }
 
 

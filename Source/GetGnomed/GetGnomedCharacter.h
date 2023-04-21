@@ -84,18 +84,19 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	int maxHealth{5};
-	int health{5};
-
 	bool isDead{false};
 	int GetHealth();
 	void SetHealth(int newHealth);
 	UFUNCTION(BlueprintCallable, Category = Health)
-	void TakeSomeDamage(int damage);
-
+	void GetHit(int damage);
+	int damageDealt{1};
+	
 private:
 	float invTimer{0};
 	float invBuffer{.5};
 	bool isInv{false};
+	
+	int health{5};
 
 
 	// AS addons

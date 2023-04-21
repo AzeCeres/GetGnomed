@@ -50,6 +50,7 @@ void AGetGnomedCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	//SetHasRifle(true);
 }
 
 void AGetGnomedCharacter::Tick(float DeltaSeconds)
@@ -88,14 +89,13 @@ void AGetGnomedCharacter::SetHealth(int newHealth){
 	health = newHealth;
 }
 
-void AGetGnomedCharacter::TakeDamage(int damage)
+void AGetGnomedCharacter::GetHit(int damage)
 {
 	if (isInv)
 		return;
 	health -= damage;
 	invTimer=0;
 }
-
 
 void AGetGnomedCharacter::Move(const FInputActionValue& Value)
 {

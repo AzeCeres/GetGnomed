@@ -15,7 +15,7 @@ void AWaveSpawner::BeginPlay()
 	SpawnPoints.Init(nullptr,3);
 	Super::BeginPlay();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawnPoint::StaticClass(), SpawnPoints);
-	SpawnWave(100,5);
+	SpawnWave(5,5);
 }
 
 // Called every frame

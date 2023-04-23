@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
+#include "WaveController.h"
+#include "WaveSpawner.h"
 #include "GetGnomedGameMode.generated.h"
 
 UCLASS(minimalapi)
@@ -27,6 +29,15 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
 		float GameTimeScore;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
+		TArray<AActor*> WaveController;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
+		TArray<AActor*> WaveSpawner;
+
+	UFUNCTION(BlueprintCallable, Category = "My Functions")
+		void StartGame();
 
 private:
 	void TriggerWin();

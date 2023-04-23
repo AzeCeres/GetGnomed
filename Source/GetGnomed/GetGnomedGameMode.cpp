@@ -2,6 +2,7 @@
 
 #include "GetGnomedGameMode.h"
 #include "GetGnomedCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
 AGetGnomedGameMode::AGetGnomedGameMode()
@@ -23,8 +24,15 @@ void AGetGnomedGameMode::Tick(float DeltaTime)
 	{
 		GameTimeScore++;
 	}
+}
 
-	//wave controller stuff, eg. check for enemy count and spawn waves accordingly
+void AGetGnomedGameMode::StartGame()
+{
+	GameRunState = true;
+	WaveSpawner.Init(nullptr, 0);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveSpawner::StaticClass(), WaveSpawner);
+	WaveController.Init(nullptr, 0);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveController::StaticClass(), WaveController);
 }
 
 void AGetGnomedGameMode::TriggerWin()

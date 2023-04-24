@@ -56,6 +56,8 @@ void AGetGnomedCharacter::BeginPlay()
 		}
 	}
 	//SetHasRifle(true);
+
+	health = 5;
 }
 
 void AGetGnomedCharacter::Tick(float DeltaSeconds)

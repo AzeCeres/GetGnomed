@@ -85,7 +85,9 @@ public:
 
 	int maxHealth{5};
 	bool isDead{false};
+	UFUNCTION(BlueprintCallable, Category = Health)
 	int GetHealth();
+	UFUNCTION(BlueprintCallable, Category = Health)
 	void SetHealth(int newHealth);
 	UFUNCTION(BlueprintCallable, Category = Health)
 	void GetHit(int damage);
@@ -95,13 +97,13 @@ private:
 	float invTimer{0};
 	float invBuffer{.5};
 	bool isInv{false};
-	
-	int health{5};
 
-
-	// AS addons
+	// AS junk vv
 public:
 	//effect stuffs
+
+	UPROPERTY(EditAnywhere, Category = EffectStuffs)
+		int health;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
 		bool AttackUpEffect;

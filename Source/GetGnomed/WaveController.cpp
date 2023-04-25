@@ -62,8 +62,11 @@ void AWaveController::ControlWave()
 void AWaveController::ChangeWave(int WaveNR)
 {
 	WaveID = WaveNR + 1;
-	EnemyCount = WaveID * EnemiesPerWave;
-	float TimeBetweenSpawns = pow(e, 0.05*WaveID) * multiplier + minTime;
+
+	EnemyCount = pow(e,0.2*WaveID)*4+1;
+	
+	//EnemyCount = WaveID * EnemiesPerWave;
+	float TimeBetweenSpawns = pow(e, -0.05*WaveID) * multiplier + minTime;
 	Cast<AWaveSpawner>(WaveSpawner)->SpawnWave(EnemyCount, TimeBetweenSpawns);
 	if(GEngine)
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Wave Nr %i, Time Between Spawns %f Enemy Count %i"), WaveID, TimeBetweenSpawns, EnemyCount));

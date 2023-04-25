@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GetGnomedCharacter.generated.h"
 
 class UInputComponent;
@@ -97,7 +98,38 @@ private:
 	float invTimer{0};
 	float invBuffer{.5};
 	bool isInv{false};
-	
-	int health{5};
+
+	// AS junk vv
+public:
+	//effect stuffs
+
+	UPROPERTY(EditAnywhere, Category = EffectStuffs)
+		int health;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
+		bool AttackUpEffect;
+
+	class UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
+		bool SpeedEffect;
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void IncreaseSpeed(float NewSpeed);
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void IncreaseDamage(float newDamage);
+
+	//player stats
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
+		float  MovementSpeed;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
+		float AttackDamage;
+
+		//player default stats
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
+		float DefaultDamage = 25;
 };
 

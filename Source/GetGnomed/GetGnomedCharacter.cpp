@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -35,6 +36,10 @@ AGetGnomedCharacter::AGetGnomedCharacter()
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
 
+
+
+	MovementSpeed = 1;
+	AttackDamage = DefaultDamage;
 }
 
 void AGetGnomedCharacter::BeginPlay()
@@ -51,6 +56,8 @@ void AGetGnomedCharacter::BeginPlay()
 		}
 	}
 	//SetHasRifle(true);
+
+	health = 5;
 }
 
 void AGetGnomedCharacter::Tick(float DeltaSeconds)
@@ -95,6 +102,24 @@ void AGetGnomedCharacter::GetHit(int damage)
 		return;
 	health -= damage;
 	invTimer=0;
+}
+
+void AGetGnomedCharacter::IncreaseSpeed(float NewSpeed)
+{
+	MovementSpeed = NewSpeed;
+
+	//float WalkSpeed = CharacterMovement->MaxWalkSpeed;
+	CharacterMovement->MaxWalkSpeed = 600.f * NewSpeed;
+	CharacterMovement->MaxFlySpeed = 600.f * NewSpeed;
+	CharacterMovement->GroundFriction = 8.f/NewSpeed;
+
+
+	//Cast(GetMovementComponent())->MaxWalkSpeed = 100.0f*NewSpeed;
+}
+
+void AGetGnomedCharacter::IncreaseDamage(float newDamage)
+{
+	AttackDamage = newDamage;
 }
 
 void AGetGnomedCharacter::Move(const FInputActionValue& Value)

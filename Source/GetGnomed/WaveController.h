@@ -26,21 +26,31 @@ public:
 
 
 public:
-	// variables
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
-		int WaveID;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
-		int EnemyCount;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
-		AActor* WaveSpawner;
-
+	
+	
+	
 	// functions
+	UFUNCTION(BlueprintCallable, Category = Wave)
+	int GetWave();
+	UFUNCTION(BlueprintCallable, Category = Wave)
+	void SetWave(int NewWaveID);
+	UFUNCTION(BlueprintCallable, Category = Wave)
+	int GetEnemyCount();
 
+	UPROPERTY(EditAnywhere, Category=Wave)
+	int EnemiesPerWave{15};
+	
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 		void ControlWave();
-
+private:
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
-		void ChangeWave(int NewWave);
+		void ChangeWave(int WaveNR);
+	// variables
+	int WaveID;
+	int EnemyCount;
+	AActor* WaveSpawner;
+
+	float e {2.71828};
+	float multiplier{4};
+	float minTime {2};
 };

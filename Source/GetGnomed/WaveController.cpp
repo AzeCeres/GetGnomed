@@ -2,6 +2,9 @@
 
 
 #include "WaveController.h"
+
+#include <Imath/Deploy/Imath-3.1.3/include/Imath/ImathMath.h>
+
 #include "WaveSpawner.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -22,6 +25,7 @@ void AWaveController::BeginPlay()
 	EnemyCount = 0;
 
 	WaveSpawner = UGameplayStatics::GetActorOfClass(GetWorld(), AWaveSpawner::StaticClass());
+	ChangeWave(WaveID);
 }
 
 // Called every frame
@@ -31,19 +35,36 @@ void AWaveController::Tick(float DeltaTime)
 
 }
 
+int AWaveController::GetWave()
+{
+	return WaveID;
+}
+
+void AWaveController::SetWave(int NewWaveID)
+{
+	WaveID = NewWaveID;
+}
+
+int AWaveController::GetEnemyCount()
+{
+	return  EnemyCount;
+}
+
 void AWaveController::ControlWave()
 {
 	EnemyCount--;
-	if(EnemyCount <=0 && WaveID < 4)
+	if(EnemyCount <=0)
 	{
-		EnemyCount = (WaveID + 1) * 15;
-		ChangeWave(WaveID + 1);
+		ChangeWave(WaveID);
 	}
 }
 
-void AWaveController::ChangeWave(int NewWave)
+void AWaveController::ChangeWave(int WaveNR)
 {
-	WaveID++;
-	Cast<AWaveSpawner>(WaveSpawner)->SpawnWave(NewWave * 15, 5 - NewWave);
-	UE_LOG(LogTemp, Warning, TEXT("Spawning new wave"));
+	WaveID = WaveNR + 1;
+	EnemyCount = WaveID * EnemiesPerWave;
+	float TimeBetweenSpawns = pow(e, 0.05*WaveID) * multiplier + minTime;
+	Cast<AWaveSpawner>(WaveSpawner)->SpawnWave(EnemyCount, TimeBetweenSpawns);
+	if(GEngine)
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Wave Nr %i, Time Between Spawns %f Enemy Count %i"), WaveID, TimeBetweenSpawns, EnemyCount));
 }

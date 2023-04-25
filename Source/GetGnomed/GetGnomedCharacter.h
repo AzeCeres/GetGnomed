@@ -81,13 +81,16 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
-
+	UPROPERTY(BlueprintReadOnly)
 	int maxHealth{5};
 	bool isDead{false};
+	UFUNCTION(BlueprintCallable, Category = Health)
 	int GetHealth();
+	UFUNCTION(BlueprintCallable, Category = Health)
 	void SetHealth(int newHealth);
 	UFUNCTION(BlueprintCallable, Category = Health)
 	void GetHit(int damage);
+	UPROPERTY(BlueprintReadOnly)
 	int damageDealt{1};
 	
 private:

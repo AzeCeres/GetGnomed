@@ -8,8 +8,7 @@
 #include "WaveSpawner.generated.h"
 
 UCLASS()
-class GETGNOMED_API AWaveSpawner : public AActor
-{
+class GETGNOMED_API AWaveSpawner : public AActor{
 	GENERATED_BODY()
 	
 public:	
@@ -28,6 +27,8 @@ public:
 	void SpawnWave(int NrOfEnemies, float TimeBetweenSpawns);
 	UPROPERTY(EditAnywhere, Category=ChangeMe)
 	bool isTimeBetweenIndividualSpawns;
+
+	AActor* actor;
 private:
 	int nrOfPoints{3};
 	int EnemiesToSpawn{0};

@@ -7,7 +7,9 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "UnrealWidgetFwd.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -119,8 +121,9 @@ void AGetGnomedCharacter::IncreaseSpeed(float NewSpeed)
 
 void AGetGnomedCharacter::IncreaseDamage(float newDamage)
 {
-	AttackDamage = newDamage;
+	damageDealt = newDamage;
 }
+
 
 void AGetGnomedCharacter::Move(const FInputActionValue& Value)
 {

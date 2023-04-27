@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "UnrealWidgetFwd.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GetGnomedCharacter.generated.h"
 

@@ -27,8 +27,11 @@ public:
 	void SpawnWave(int NrOfEnemies, float TimeBetweenSpawns);
 	UPROPERTY(EditAnywhere, Category=ChangeMe)
 	bool isTimeBetweenIndividualSpawns;
+	UPROPERTY(BlueprintReadOnly, Category=Enemies)
+	int enemiesThisWave{0};
+	UPROPERTY(BlueprintReadOnly, Category=Timer)
+	float TotalTimeThisWave{0};
 
-	AActor* actor;
 private:
 	int nrOfPoints{3};
 	int EnemiesToSpawn{0};

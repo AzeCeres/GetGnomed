@@ -13,7 +13,6 @@ void AWaveSpawner::BeginPlay(){
 	SpawnPoints.Init(nullptr,3);
 	Super::BeginPlay();
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AEnemySpawnPoint::StaticClass(), SpawnPoints);
-	actor = UGameplayStatics::GetActorOfClass(GetWorld(), AEnemySpawnPoint::StaticClass());
 	//SpawnWave(100,5);
 }
 
@@ -45,8 +44,18 @@ void AWaveSpawner::Tick(float DeltaTime){
 
 void AWaveSpawner::SpawnWave(int NrOfEnemies, float TimeBetweenSpawns){
 	EnemiesToSpawn = NrOfEnemies;
+	enemiesThisWave = NrOfEnemies;
 	spawnBuffer = TimeBetweenSpawns;
 	spawnTimer=0;
+	if (isTimeBetweenIndividualSpawns)
+	{
+		TotalTimeThisWave = TimeBetweenSpawns*enemiesThisWave;
+	}
+	else
+	{
+		TotalTimeThisWave = (TimeBetweenSpawns*enemiesThisWave)/SpawnPoints.Num();
+	}
+	
 }
 
 void AWaveSpawner::SpawnEnemy(int IndexOfSpawnPoints){

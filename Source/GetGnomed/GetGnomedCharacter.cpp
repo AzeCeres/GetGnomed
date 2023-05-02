@@ -66,9 +66,16 @@ void AGetGnomedCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 	invTimer += DeltaSeconds;
+	speedUpTimer += DeltaSeconds;
+	damageUpTimer += DeltaSeconds;
 	isInv = invTimer < invBuffer ? true : false;
+	AttackUpEffect = damageUpTimer < damageUpBuffer ? true : false;
+	SpeedEffect = speedUpTimer < speedUpBuffer ? true : false;
 	if (health <=0)
 		isDead = true;
+	damageDealt=AttackUpEffect ? defaultDamage*2 : defaultDamage;
+	CharacterMovement->MaxWalkSpeed = SpeedEffect ? defaultSpeed * 1.333 : defaultSpeed;
+	
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -96,6 +103,8 @@ int AGetGnomedCharacter::GetHealth(){
 
 void AGetGnomedCharacter::SetHealth(int newHealth){
 	health = newHealth;
+	if (health>maxHealth)
+		health=maxHealth;
 }
 
 void AGetGnomedCharacter::GetHit(int damage)
@@ -106,22 +115,22 @@ void AGetGnomedCharacter::GetHit(int damage)
 	invTimer=0;
 }
 
-void AGetGnomedCharacter::IncreaseSpeed(float NewSpeed)
+void AGetGnomedCharacter::IncreaseSpeed()
 {
-	MovementSpeed = NewSpeed;
-
+	//MovementSpeed = NewSpeed;
+	speedUpTimer = 0;
 	//float WalkSpeed = CharacterMovement->MaxWalkSpeed;
-	CharacterMovement->MaxWalkSpeed = 600.f * NewSpeed;
-	CharacterMovement->MaxFlySpeed = 600.f * NewSpeed;
-	CharacterMovement->GroundFriction = 8.f/NewSpeed;
+	//CharacterMovement->MaxWalkSpeed = 600.f * NewSpeed;
+	//CharacterMovement->MaxFlySpeed = 600.f * NewSpeed;
+	//CharacterMovement->GroundFriction = 8.f/NewSpeed;
 
 
 	//Cast(GetMovementComponent())->MaxWalkSpeed = 100.0f*NewSpeed;
 }
 
-void AGetGnomedCharacter::IncreaseDamage(float newDamage)
+void AGetGnomedCharacter::IncreaseDamage()
 {
-	damageDealt = newDamage;
+	damageUpTimer=0;
 }
 
 

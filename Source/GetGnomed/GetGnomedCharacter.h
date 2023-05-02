@@ -99,8 +99,11 @@ private:
 	float invTimer{0};
 	float invBuffer{.5};
 	bool isInv{false};
-
-	// AS junk vv
+	int defaultDamage{1};
+	float damageUpBuffer{10}, speedUpBuffer{10};
+	float damageUpTimer{10}, speedUpTimer{10};
+	float defaultSpeed{600};
+	
 public:
 	//effect stuffs
 
@@ -116,10 +119,10 @@ public:
 		bool SpeedEffect;
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void IncreaseSpeed(float NewSpeed);
+		void IncreaseSpeed();
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void IncreaseDamage(float newDamage);
+		void IncreaseDamage();
 
 	//player stats
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)

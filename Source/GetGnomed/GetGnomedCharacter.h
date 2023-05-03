@@ -94,15 +94,26 @@ public:
 	void GetHit(int damage);
 	UPROPERTY(BlueprintReadOnly)
 	int damageDealt{1};
+
 	
+	UPROPERTY(EditInstanceOnly,BlueprintReadOnly, Category = EffectStuffs)
+	float damageUpBuffer{10};
+	UPROPERTY(EditInstanceOnly,BlueprintReadOnly, Category = EffectStuffs)
+	float speedUpBuffer{10};
+	UPROPERTY(BlueprintReadOnly, Category = EffectStuffs)
+	float damageUpTimer{damageUpBuffer};
+	UPROPERTY(BlueprintReadOnly, Category = EffectStuffs)
+	float speedUpTimer{speedUpBuffer};
+	UPROPERTY(EditInstanceOnly,BlueprintReadOnly, Category = EffectStuffs)
+	float SpeedUp{1.5};
 private:
 	float invTimer{0};
 	float invBuffer{.5};
 	bool isInv{false};
 	int defaultDamage{1};
-	float damageUpBuffer{10}, speedUpBuffer{10};
-	float damageUpTimer{10}, speedUpTimer{10};
 	float defaultSpeed{600};
+	
+	
 	
 public:
 	//effect stuffs
@@ -123,7 +134,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
 		void IncreaseDamage();
-
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+			float GetSpeedTimer();
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+			float GetDamageTimer();
 	//player stats
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
 		float  MovementSpeed;

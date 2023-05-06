@@ -41,6 +41,10 @@ class AGetGnomedCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* PauseAction;
+
 	
 public:
 	AGetGnomedCharacter();
@@ -149,5 +153,13 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
 		float DefaultDamage = 25;
+
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
+		bool GamePaused;
+
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void PauseGame();
 };
 

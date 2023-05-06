@@ -14,7 +14,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 // AGetGnomedCharacter
-
 AGetGnomedCharacter::AGetGnomedCharacter()
 {
 	// Character doesnt have a rifle at start
@@ -37,11 +36,10 @@ AGetGnomedCharacter::AGetGnomedCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-
-
-
+	
 	MovementSpeed = 1;
 	AttackDamage = DefaultDamage;
+	GamePaused = false;
 }
 
 void AGetGnomedCharacter::BeginPlay()
@@ -94,6 +92,8 @@ void AGetGnomedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGetGnomedCharacter::Look);
+
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Completed, this, &AGetGnomedCharacter::PauseGame);
 	}
 }
 
@@ -113,6 +113,11 @@ void AGetGnomedCharacter::GetHit(int damage)
 		return;
 	health -= damage;
 	invTimer=0;
+
+	if (health <= 0)
+	{
+		PauseGame();
+	}
 }
 
 void AGetGnomedCharacter::IncreaseSpeed()
@@ -178,4 +183,20 @@ void AGetGnomedCharacter::SetHasRifle(bool bNewHasRifle)
 bool AGetGnomedCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+
+void AGetGnomedCharacter::PauseGame()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Pause Triggered")));
+
+	GetWorld()->GetFirstPlayerController()->Pause();
+
+	if (GamePaused)
+	{
+		GamePaused = false;
+	} else
+	{
+		GamePaused = true;
+	}
 }

@@ -116,7 +116,9 @@ private:
 	bool isInv{false};
 	int defaultDamage{1};
 	float defaultSpeed{600};
-	
+
+	bool ExtraPaused{ false };
+
 	
 	
 public:
@@ -161,5 +163,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
 		void PauseGame();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void endGame();
 };
 

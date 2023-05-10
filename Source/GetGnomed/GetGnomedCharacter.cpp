@@ -116,7 +116,8 @@ void AGetGnomedCharacter::GetHit(int damage)
 
 	if (health <= 0)
 	{
-		PauseGame();
+		endGame();
+		isDead = true;
 	}
 }
 
@@ -190,7 +191,12 @@ void AGetGnomedCharacter::PauseGame()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Pause Triggered")));
 
-	GetWorld()->GetFirstPlayerController()->Pause();
+	
+	if (!ExtraPaused)
+	{
+		GetWorld()->GetFirstPlayerController()->Pause();
+	}
+	
 
 	if (GamePaused)
 	{
@@ -198,5 +204,20 @@ void AGetGnomedCharacter::PauseGame()
 	} else
 	{
 		GamePaused = true;
+		// Pause menu
+	}
+}
+
+void AGetGnomedCharacter::endGame()
+{
+	ExtraPaused = true;
+	GetWorld()->GetFirstPlayerController()->Pause();
+
+	if(isDead)
+	{
+		// Death Screen
+	} else
+	{
+		// Win Screen
 	}
 }

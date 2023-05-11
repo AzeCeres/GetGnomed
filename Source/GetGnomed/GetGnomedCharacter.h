@@ -160,11 +160,22 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
 		bool GamePaused;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
+		bool EndlessModeActive{false};
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
 		void PauseGame();
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void endGame();
+		void EndGame();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void RetryGame();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void ExitGame();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void ActivateEndlessMode();
 };
 

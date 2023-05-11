@@ -116,7 +116,7 @@ void AGetGnomedCharacter::GetHit(int damage)
 
 	if (health <= 0)
 	{
-		endGame();
+		EndGame();
 		isDead = true;
 	}
 }
@@ -196,7 +196,6 @@ void AGetGnomedCharacter::PauseGame()
 	{
 		GetWorld()->GetFirstPlayerController()->Pause();
 	}
-	
 
 	if (GamePaused)
 	{
@@ -208,7 +207,7 @@ void AGetGnomedCharacter::PauseGame()
 	}
 }
 
-void AGetGnomedCharacter::endGame()
+void AGetGnomedCharacter::EndGame()
 {
 	ExtraPaused = true;
 	GetWorld()->GetFirstPlayerController()->Pause();
@@ -220,4 +219,23 @@ void AGetGnomedCharacter::endGame()
 	{
 		// Win Screen
 	}
+}
+
+void AGetGnomedCharacter::RetryGame()
+{
+	ExtraPaused = false;
+	isDead = false;
+	// call begin play ?
+}
+
+void AGetGnomedCharacter::ExitGame()
+{
+	// go to start menu
+}
+
+void AGetGnomedCharacter::ActivateEndlessMode()
+{
+	ExtraPaused = false;
+	EndlessModeActive = true;
+	// continue the game without wave constraint
 }

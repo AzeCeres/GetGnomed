@@ -47,7 +47,7 @@ void AWaveController::SetWave(int NewWaveID)
 
 int AWaveController::GetEnemyCount()
 {
-	return  EnemyCount;
+	return EnemyCount;
 }
 
 void AWaveController::ControlWave()

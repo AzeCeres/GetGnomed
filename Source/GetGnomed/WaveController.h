@@ -7,6 +7,8 @@
 #include "WaveSpawner.h"
 #include "WaveController.generated.h"
 
+class AGetGnomedCharacter;
+
 UCLASS()
 class GETGNOMED_API AWaveController : public AActor
 {

@@ -156,13 +156,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
 		float DefaultDamage = 25;
 
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
-		bool GamePaused;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
-		bool EndlessModeActive{false};
-
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
 		void PauseGame();
 
@@ -170,12 +163,12 @@ public:
 		void EndGame();
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void RetryGame();
+		void UnExtraPause();
 
-	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void ExitGame();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widget")
+		void ShowWin();
 
-	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void ActivateEndlessMode();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widget")
+		void ShowLoss();
 };
 

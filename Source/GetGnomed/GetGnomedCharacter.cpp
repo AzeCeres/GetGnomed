@@ -39,7 +39,6 @@ AGetGnomedCharacter::AGetGnomedCharacter()
 	
 	MovementSpeed = 1;
 	AttackDamage = DefaultDamage;
-	GamePaused = false;
 }
 
 void AGetGnomedCharacter::BeginPlay()
@@ -93,7 +92,7 @@ void AGetGnomedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGetGnomedCharacter::Look);
 
-		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Completed, this, &AGetGnomedCharacter::PauseGame);
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AGetGnomedCharacter::PauseGame);
 	}
 }
 
@@ -116,8 +115,8 @@ void AGetGnomedCharacter::GetHit(int damage)
 
 	if (health <= 0)
 	{
-		EndGame();
 		isDead = true;
+		EndGame();
 	}
 }
 
@@ -189,21 +188,9 @@ bool AGetGnomedCharacter::GetHasRifle()
 
 void AGetGnomedCharacter::PauseGame()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Pause Triggered")));
-
-	
 	if (!ExtraPaused)
 	{
 		GetWorld()->GetFirstPlayerController()->Pause();
-	}
-
-	if (GamePaused)
-	{
-		GamePaused = false;
-	} else
-	{
-		GamePaused = true;
-		// Pause menu
 	}
 }
 
@@ -214,28 +201,24 @@ void AGetGnomedCharacter::EndGame()
 
 	if(isDead)
 	{
-		// Death Screen
+		ShowLoss();
 	} else
 	{
-		// Win Screen
+		ShowWin();
 	}
 }
 
-void AGetGnomedCharacter::RetryGame()
+void AGetGnomedCharacter::UnExtraPause()
 {
 	ExtraPaused = false;
 	isDead = false;
-	// call begin play ?
+	PauseGame();
 }
 
-void AGetGnomedCharacter::ExitGame()
+void AGetGnomedCharacter::ShowLoss_Implementation()
 {
-	// go to start menu
 }
 
-void AGetGnomedCharacter::ActivateEndlessMode()
+void AGetGnomedCharacter::ShowWin_Implementation()
 {
-	ExtraPaused = false;
-	EndlessModeActive = true;
-	// continue the game without wave constraint
 }

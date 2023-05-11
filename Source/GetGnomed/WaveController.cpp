@@ -5,6 +5,7 @@
 
 #include <Imath/Deploy/Imath-3.1.3/include/Imath/ImathMath.h>
 
+#include "GetGnomedCharacter.h"
 #include "WaveSpawner.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -63,11 +64,21 @@ void AWaveController::ChangeWave(int WaveNR)
 {
 	WaveID = WaveNR + 1;
 
+	if (WaveID == 11)
+	{
+		ACharacter* character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+		if (character == nullptr) return;
+
+		AGetGnomedCharacter* player = Cast<AGetGnomedCharacter>(character);
+		if (player == nullptr) return;
+
+		player->EndGame();
+	}
+
 	EnemyCount = pow(e,0.2*WaveID)*4+1;
 	
 	//EnemyCount = WaveID * EnemiesPerWave;
 	float TimeBetweenSpawns = pow(e, -0.05*WaveID) * multiplier + minTime;
 	Cast<AWaveSpawner>(WaveSpawner)->SpawnWave(EnemyCount, TimeBetweenSpawns);
-	if(GEngine)
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Wave Nr %i, Time Between Spawns %f Enemy Count %i"), WaveID, TimeBetweenSpawns, EnemyCount));
+	//if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Wave Nr %i, Time Between Spawns %f Enemy Count %i"), WaveID, TimeBetweenSpawns, EnemyCount));
 }

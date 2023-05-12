@@ -48,7 +48,16 @@ public:
 	/** Make the weapon Fire a Projectile */
 	UFUNCTION(BlueprintCallable, Category="Weapon")
 	void Fire();
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	int MaxAmmo{15};
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+	int Ammo{MaxAmmo};
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	int GetAmmo();
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void SetAmmo(int newAmmo);
+	UFUNCTION(BlueprintCallable, Category="Weapon")
+	void AddAmmo(int addedAmmo);
 protected:
 	/** Ends gameplay for this component. */
 	UFUNCTION()

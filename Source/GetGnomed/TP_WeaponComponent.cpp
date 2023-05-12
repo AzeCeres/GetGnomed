@@ -14,37 +14,36 @@
 UTP_WeaponComponent::UTP_WeaponComponent()
 {
 	// Default offset from the character location for projectiles to spawn
-	MuzzleOffset = FVector(60.0f, 0.0f, 10.0f);
+	MuzzleOffset = FVector(50.0f, 0.0f, 10.0f);
 }
 
 
 void UTP_WeaponComponent::Fire()
 {
 	if (Character == nullptr || Character->GetController() == nullptr)
-	{
 		return;
-	}
-
+	
+	if(Ammo==0)
+		return;
+	Ammo--;
 	// Try and fire a projectile
-	if (ProjectileClass != nullptr)
-	{
-		UWorld* const World = GetWorld();
-		if (World != nullptr)
-		{
-			APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
-			const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
-			// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
-			const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
+	if (ProjectileClass == nullptr) return;
 	
-			//Set Spawn Collision Handling Override
-			FActorSpawnParameters ActorSpawnParams;
-			ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	UWorld* const World = GetWorld();
+	if (World == nullptr) return;
 	
-			// Spawn the projectile at the muzzle
-			World->SpawnActor<AGetGnomedProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
-		}
-	}
+	APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
+	const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();
+	// MuzzleOffset is in camera space, so transform it to world space before offsetting from the character location to find the final muzzle position
+	const FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnRotation.RotateVector(MuzzleOffset);
 	
+	//Set Spawn Collision Handling Override
+	FActorSpawnParameters ActorSpawnParams;
+	ActorSpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	
+	// Spawn the projectile at the muzzle
+	World->SpawnActor<AGetGnomedProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
 	// Try and play the sound if specified
 	if (FireSound != nullptr)
 	{
@@ -60,6 +59,33 @@ void UTP_WeaponComponent::Fire()
 		{
 			AnimInstance->Montage_Play(FireAnimation, 1.f);
 		}
+	}
+}
+
+int UTP_WeaponComponent::GetAmmo()
+{
+	return Ammo;
+}
+
+void UTP_WeaponComponent::SetAmmo(int newAmmo)
+{
+	Ammo = newAmmo;
+	if (Ammo>MaxAmmo){
+		Ammo=MaxAmmo;
+	}
+	else if (Ammo>0){
+		Ammo=0;
+	}
+}
+
+void UTP_WeaponComponent::AddAmmo(int addedAmmo)
+{
+	Ammo =+ addedAmmo;
+	if (Ammo>MaxAmmo){
+		Ammo=MaxAmmo;
+	}
+	else if (Ammo>0){
+		Ammo=0;
 	}
 }
 

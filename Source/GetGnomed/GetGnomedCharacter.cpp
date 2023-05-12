@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "SaveGameHS.h"
 #include "UnrealWidgetFwd.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -116,7 +117,7 @@ void AGetGnomedCharacter::GetHit(int damage)
 	if (health <= 0)
 	{
 		isDead = true;
-		EndGame();
+		EndGame(TotScore);
 	}
 }
 
@@ -194,10 +195,24 @@ void AGetGnomedCharacter::PauseGame()
 	}
 }
 
-void AGetGnomedCharacter::EndGame()
+void AGetGnomedCharacter::EndGame(int CurrentScore)
 {
 	ExtraPaused = true;
 	GetWorld()->GetFirstPlayerController()->Pause();
+
+
+	// Create instance of savegame class
+	USaveGameHS* SaveGameInstance = Cast<USaveGameHS>(UGameplayStatics::CreateSaveGameObject(USaveGameHS::StaticClass()));
+	if (UGameplayStatics::DoesSaveGameExist("MySlot", 0))
+	{
+		SaveGameInstance = Cast<USaveGameHS>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
+	}
+	HighScoreCurrent = SaveGameInstance->HighScore;
+	if (CurrentScore > HighScoreCurrent)
+	{
+		SaveGameInstance->HighScore = CurrentScore;
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
+	}
 
 	if(isDead)
 	{
@@ -206,6 +221,9 @@ void AGetGnomedCharacter::EndGame()
 	{
 		ShowWin();
 	}
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Total Score: %i"), CurrentScore));
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("High Score: %i"), SaveGameInstance->HighScore));
+
 }
 
 void AGetGnomedCharacter::UnExtraPause()
@@ -213,6 +231,11 @@ void AGetGnomedCharacter::UnExtraPause()
 	ExtraPaused = false;
 	isDead = false;
 	PauseGame();
+}
+
+void AGetGnomedCharacter::UpdateGameScore(int newScore)
+{
+	TotScore = newScore;
 }
 
 void AGetGnomedCharacter::ShowLoss_Implementation()

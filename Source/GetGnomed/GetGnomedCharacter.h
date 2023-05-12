@@ -160,7 +160,7 @@ public:
 		void PauseGame();
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void EndGame();
+		void EndGame(int CurrentScore);
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
 		void UnExtraPause();
@@ -170,5 +170,16 @@ public:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widget")
 		void ShowLoss();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HighScore")
+		int TotScore {0};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HighScore")
+		int HighScoreCurrent;
+
+	UFUNCTION(BlueprintCallable, Category = "HighScore")
+		void UpdateGameScore(int newScore);
+
+
 };
 

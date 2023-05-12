@@ -26,6 +26,7 @@ void AWaveController::BeginPlay()
 	EnemyCount = 0;
 
 	WaveSpawner = UGameplayStatics::GetActorOfClass(GetWorld(), AWaveSpawner::StaticClass());
+
 	ChangeWave(WaveID);
 }
 
@@ -55,6 +56,15 @@ void AWaveController::ControlWave(int EnemyWorth)
 {
 	EnemyCount--;
 	TotScore += EnemyWorth;
+
+	ACharacter* character = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
+	if (character == nullptr) return;
+
+	AGetGnomedCharacter* player = Cast<AGetGnomedCharacter>(character);
+	if (player == nullptr) return;
+
+	player->UpdateGameScore(TotScore);
+
 	if(EnemyCount <=0)
 	{
 		ChangeWave(WaveID);
@@ -73,7 +83,7 @@ void AWaveController::ChangeWave(int WaveNR)
 		AGetGnomedCharacter* player = Cast<AGetGnomedCharacter>(character);
 		if (player == nullptr) return;
 
-		player->EndGame();
+		player->EndGame(TotScore);
 	}
 
 	EnemyCount = pow(e,0.2*WaveID)*4+1;
@@ -81,7 +91,7 @@ void AWaveController::ChangeWave(int WaveNR)
 	//EnemyCount = WaveID * EnemiesPerWave;
 	float TimeBetweenSpawns = pow(e, -0.05*WaveID) * multiplier + minTime;
 	Cast<AWaveSpawner>(WaveSpawner)->SpawnWave(EnemyCount, TimeBetweenSpawns);
-	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Total Score %i"), TotScore));
+	//if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Total Score %i"), TotScore));
 
 	//if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Wave Nr %i, Time Between Spawns %f Enemy Count %i"), WaveID, TimeBetweenSpawns, EnemyCount));
 }

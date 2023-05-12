@@ -51,6 +51,7 @@ private:
 	int WaveID;
 	int EnemyCount;
 	int TotScore;
+	int HighScore;
 	AActor* WaveSpawner;
 
 	float e {2.71828};

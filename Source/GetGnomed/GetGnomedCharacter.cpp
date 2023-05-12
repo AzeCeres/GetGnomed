@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-// Edited and added onto by Julian
+// Edited and added onto by Julian&co
 #include "GetGnomedCharacter.h"
 #include "GetGnomedProjectile.h"
 #include "Animation/AnimInstance.h"

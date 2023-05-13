@@ -23,14 +23,15 @@ void UTP_WeaponComponent::Fire()
 	if (Character == nullptr || Character->GetController() == nullptr)
 		return;
 	
-	if(Ammo==0)
-		return;
-	Ammo--;
 	// Try and fire a projectile
 	if (ProjectileClass == nullptr) return;
 	
 	UWorld* const World = GetWorld();
 	if (World == nullptr) return;
+	
+	if(Ammo==0)
+		return;
+	Ammo--;
 	
 	APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());
 	const FRotator SpawnRotation = PlayerController->PlayerCameraManager->GetCameraRotation();

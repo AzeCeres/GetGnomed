@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-// Edited and added onto by Julian
+// Edited and added onto by Julian&co
 #pragma once
 
 #include "CoreMinimal.h"
@@ -40,6 +40,10 @@ class AGetGnomedCharacter : public ACharacter
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* PauseAction;
 
 	
 public:
@@ -112,7 +116,9 @@ private:
 	bool isInv{false};
 	int defaultDamage{1};
 	float defaultSpeed{600};
-	
+
+	bool ExtraPaused{ false };
+
 	
 	
 public:
@@ -149,5 +155,31 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
 		float DefaultDamage = 25;
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void PauseGame();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void EndGame(int CurrentScore);
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void UnExtraPause();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widget")
+		void ShowWin();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widget")
+		void ShowLoss();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HighScore")
+		int TotScore {0};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HighScore")
+		int HighScoreCurrent;
+
+	UFUNCTION(BlueprintCallable, Category = "HighScore")
+		void UpdateGameScore(int newScore);
+
+
 };
 

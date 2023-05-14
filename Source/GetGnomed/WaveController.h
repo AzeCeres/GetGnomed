@@ -7,6 +7,8 @@
 #include "WaveSpawner.h"
 #include "WaveController.generated.h"
 
+class AGetGnomedCharacter;
+
 UCLASS()
 class GETGNOMED_API AWaveController : public AActor
 {
@@ -41,13 +43,15 @@ public:
 	int EnemiesPerWave{15};
 	
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
-		void ControlWave();
+		void ControlWave(int EnemyWorth);
 private:
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 		void ChangeWave(int WaveNR);
 	// variables
 	int WaveID;
 	int EnemyCount;
+	int TotScore;
+	int HighScore;
 	AActor* WaveSpawner;
 
 	float e {2.71828};

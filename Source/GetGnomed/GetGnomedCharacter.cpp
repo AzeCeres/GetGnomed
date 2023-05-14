@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-// Edited and added onto by Julian
+// Edited and added onto by Julian&co
 #include "GetGnomedCharacter.h"
 #include "GetGnomedProjectile.h"
 #include "Animation/AnimInstance.h"
@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "SaveGameHS.h"
 #include "UnrealWidgetFwd.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -14,7 +15,6 @@
 
 //////////////////////////////////////////////////////////////////////////
 // AGetGnomedCharacter
-
 AGetGnomedCharacter::AGetGnomedCharacter()
 {
 	// Character doesnt have a rifle at start
@@ -37,9 +37,7 @@ AGetGnomedCharacter::AGetGnomedCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-
-
-
+	
 	MovementSpeed = 1;
 	AttackDamage = DefaultDamage;
 }
@@ -94,6 +92,8 @@ void AGetGnomedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGetGnomedCharacter::Look);
+
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AGetGnomedCharacter::PauseGame);
 	}
 }
 
@@ -113,6 +113,12 @@ void AGetGnomedCharacter::GetHit(int damage)
 		return;
 	health -= damage;
 	invTimer=0;
+
+	if (health <= 0)
+	{
+		isDead = true;
+		EndGame(TotScore);
+	}
 }
 
 void AGetGnomedCharacter::IncreaseSpeed()
@@ -178,4 +184,64 @@ void AGetGnomedCharacter::SetHasRifle(bool bNewHasRifle)
 bool AGetGnomedCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+
+void AGetGnomedCharacter::PauseGame()
+{
+	if (!ExtraPaused)
+	{
+		GetWorld()->GetFirstPlayerController()->Pause();
+	}
+}
+
+void AGetGnomedCharacter::EndGame(int CurrentScore)
+{
+	ExtraPaused = true;
+	GetWorld()->GetFirstPlayerController()->Pause();
+
+
+	// Create instance of savegame class
+	USaveGameHS* SaveGameInstance = Cast<USaveGameHS>(UGameplayStatics::CreateSaveGameObject(USaveGameHS::StaticClass()));
+	if (UGameplayStatics::DoesSaveGameExist("MySlot", 0))
+	{
+		SaveGameInstance = Cast<USaveGameHS>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
+	}
+	HighScoreCurrent = SaveGameInstance->HighScore;
+	if (CurrentScore > HighScoreCurrent)
+	{
+		SaveGameInstance->HighScore = CurrentScore;
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
+	}
+
+	if(isDead)
+	{
+		ShowLoss();
+	} else
+	{
+		ShowWin();
+	}
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Total Score: %i"), CurrentScore));
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("High Score: %i"), SaveGameInstance->HighScore));
+
+}
+
+void AGetGnomedCharacter::UnExtraPause()
+{
+	ExtraPaused = false;
+	isDead = false;
+	PauseGame();
+}
+
+void AGetGnomedCharacter::UpdateGameScore(int newScore)
+{
+	TotScore = newScore;
+}
+
+void AGetGnomedCharacter::ShowLoss_Implementation()
+{
+}
+
+void AGetGnomedCharacter::ShowWin_Implementation()
+{
 }

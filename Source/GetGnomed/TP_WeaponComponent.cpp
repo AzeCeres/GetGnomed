@@ -74,18 +74,18 @@ void UTP_WeaponComponent::SetAmmo(int newAmmo)
 	if (Ammo>MaxAmmo){
 		Ammo=MaxAmmo;
 	}
-	else if (Ammo>0){
+	else if (Ammo<0){
 		Ammo=0;
 	}
 }
 
 void UTP_WeaponComponent::AddAmmo(int addedAmmo)
 {
-	Ammo =+ addedAmmo;
+	Ammo += addedAmmo;
 	if (Ammo>MaxAmmo){
 		Ammo=MaxAmmo;
 	}
-	else if (Ammo>0){
+	else if (Ammo<0){
 		Ammo=0;
 	}
 }

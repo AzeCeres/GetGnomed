@@ -67,11 +67,11 @@ void AGetGnomedCharacter::Tick(float DeltaSeconds)
 	speedUpTimer += DeltaSeconds;
 	damageUpTimer += DeltaSeconds;
 	isInv = invTimer < invBuffer ? true : false;
-	AttackUpEffect = damageUpTimer < damageUpBuffer ? true : false;
+	StrengthEffect = damageUpTimer < damageUpBuffer ? true : false;
 	SpeedEffect = speedUpTimer < speedUpBuffer ? true : false;
 	if (health <=0)
 		isDead = true;
-	damageDealt=AttackUpEffect ? defaultDamage*2 : defaultDamage;
+	damageDealt=StrengthEffect ? defaultDamage*2 : defaultDamage;
 	CharacterMovement->MaxWalkSpeed = SpeedEffect ? defaultSpeed * SpeedUp : defaultSpeed;
 	
 }

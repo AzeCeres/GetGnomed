@@ -39,6 +39,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "My Functions")
 		void StartGame();
 
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Game")
+	virtual FString GetOptions();
+
+	UFUNCTION(BlueprintCallable, Category = "Game")
+	virtual FString ParseOption(const FString& OptionString, const FString& OptionName);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My Variables")
+	bool isNight{false};
 private:
 	void TriggerWin();
 };

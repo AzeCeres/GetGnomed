@@ -16,6 +16,9 @@ AGetGnomedGameMode::AGetGnomedGameMode()
 
 	GameRunState = false;
 	ControllerWinBool = false;
+	if (GetOptions()=="?true"){
+		isNight = true;
+	}
 }
 
 void AGetGnomedGameMode::Tick(float DeltaTime)
@@ -34,6 +37,16 @@ void AGetGnomedGameMode::StartGame()
 	WaveController.Init(nullptr, 0);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveController::StaticClass(), WaveController);
 	
+}
+
+FString AGetGnomedGameMode::GetOptions()
+{
+	return OptionsString;
+}
+
+FString AGetGnomedGameMode::ParseOption(const FString& OptionString, const FString& OptionName)
+{
+	return ParseOption(OptionString,OptionName);
 }
 
 void AGetGnomedGameMode::TriggerWin()

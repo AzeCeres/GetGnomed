@@ -128,7 +128,7 @@ public:
 		int health;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
-		bool AttackUpEffect;
+		bool StrengthEffect;
 
 	class UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
 

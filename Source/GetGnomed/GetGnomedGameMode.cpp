@@ -33,6 +33,7 @@ void AGetGnomedGameMode::StartGame()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveSpawner::StaticClass(), WaveSpawner);
 	WaveController.Init(nullptr, 0);
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveController::StaticClass(), WaveController);
+	
 }
 
 void AGetGnomedGameMode::TriggerWin()

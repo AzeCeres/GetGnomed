@@ -16,7 +16,8 @@ AGetGnomedGameMode::AGetGnomedGameMode()
 
 	GameRunState = false;
 	ControllerWinBool = false;
-	if (GetOptions()=="?true"){
+	
+	if (OptionsString=="?true"){
 		isNight = true;
 	}
 }

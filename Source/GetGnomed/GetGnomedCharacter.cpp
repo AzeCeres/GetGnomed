@@ -238,6 +238,18 @@ void AGetGnomedCharacter::UpdateGameScore(int newScore)
 	TotScore = newScore;
 }
 
+int AGetGnomedCharacter::GetHighScore()
+{
+	return HighScoreCurrent;
+}
+
+int AGetGnomedCharacter::GetScore()
+{
+	return TotScore;
+}
+
+
+
 void AGetGnomedCharacter::ShowLoss_Implementation()
 {
 }

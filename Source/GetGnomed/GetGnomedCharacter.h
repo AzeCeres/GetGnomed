@@ -180,6 +180,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "HighScore")
 		void UpdateGameScore(int newScore);
 
+	UFUNCTION(BlueprintCallable, Category = "Highscore")
+		int GetHighScore();
+
+	UFUNCTION(BlueprintCallable, Category = "Highscore")
+		int GetScore();
 
 };
 

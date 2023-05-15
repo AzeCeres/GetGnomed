@@ -30,7 +30,14 @@ void UTP_WeaponComponent::Fire()
 	if (World == nullptr) return;
 	
 	if(Ammo==0)
+	{
+		// Try and play the sound if specified
+		if (MisFireSound != nullptr)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, MisFireSound, Character->GetActorLocation());
+		}
 		return;
+	}
 	Ammo--;
 	
 	APlayerController* PlayerController = Cast<APlayerController>(Character->GetController());

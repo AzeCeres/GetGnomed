@@ -186,5 +186,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Highscore")
 		int GetScore();
 
+	UFUNCTION(BlueprintCallable, Category = "HighScore")
+		void KillPlayer();
 };
 

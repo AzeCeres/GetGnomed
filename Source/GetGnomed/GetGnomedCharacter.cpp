@@ -248,7 +248,15 @@ int AGetGnomedCharacter::GetScore()
 	return TotScore;
 }
 
+void AGetGnomedCharacter::KillPlayer()
+{
+	if (!ExtraPaused)
+	{
+		isDead = true;
+		EndGame(TotScore);
+	}
 
+}
 
 void AGetGnomedCharacter::ShowLoss_Implementation()
 {

@@ -29,7 +29,6 @@ void AWaveSpawner::Tick(float DeltaTime){
 		if (currentSpawnPointIndex == SpawnPoints.Num()){
 			currentSpawnPointIndex=0;
 		}
-		spawnTimer=0;
 	}
 	else{
 		for (int i = 0; i < SpawnPoints.Num(); ++i){
@@ -38,8 +37,8 @@ void AWaveSpawner::Tick(float DeltaTime){
 			SpawnEnemy(i);
 			EnemiesToSpawn-=1;
 		}
-		spawnTimer=0;
 	}
+	spawnTimer=0;
 }
 
 void AWaveSpawner::SpawnWave(int NrOfEnemies, float TimeBetweenSpawns){
@@ -49,11 +48,11 @@ void AWaveSpawner::SpawnWave(int NrOfEnemies, float TimeBetweenSpawns){
 	spawnTimer=0;
 	if (isTimeBetweenIndividualSpawns)
 	{
-		TotalTimeThisWave = TimeBetweenSpawns*enemiesThisWave;
+		TotalTimeThisWave = (TimeBetweenSpawns*enemiesThisWave)+extraTime;
 	}
 	else
 	{
-		TotalTimeThisWave = (TimeBetweenSpawns*enemiesThisWave)/SpawnPoints.Num();
+		TotalTimeThisWave = ((TimeBetweenSpawns*enemiesThisWave)/SpawnPoints.Num())+extraTime;
 	}
 	
 }

@@ -39,4 +39,5 @@ private:
 	float spawnBuffer{0};
 	float spawnTimer{0};
 	int currentSpawnPointIndex{0};
+	float extraTime{30};
 };

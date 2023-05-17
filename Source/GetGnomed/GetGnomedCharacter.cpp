@@ -221,8 +221,8 @@ void AGetGnomedCharacter::EndGame(int CurrentScore)
 	{
 		ShowWin();
 	}
-	//if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Total Score: %i"), CurrentScore));
-	//if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("High Score: %i"), SaveGameInstance->HighScore));
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Total Score: %i"), CurrentScore));
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("High Score: %i"), SaveGameInstance->HighScore));
 
 }
 

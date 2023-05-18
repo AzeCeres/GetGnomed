@@ -1,10 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
+// Edited and added onto by Julian&co
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "GetGnomedCharacter.generated.h"
 
 class UInputComponent;
@@ -39,13 +40,17 @@ class AGetGnomedCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* MoveAction;
 
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* PauseAction;
+
 	
 public:
 	AGetGnomedCharacter();
 
 protected:
 	virtual void BeginPlay();
-
+	virtual void Tick(float DeltaSeconds) override;
 public:
 		
 	/** Look Input Action */
@@ -81,42 +86,106 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+	UPROPERTY(BlueprintReadOnly)
+	int maxHealth{5};
+	bool isDead{false};
+	UFUNCTION(BlueprintCallable, Category = Health)
+	int GetHealth();
+	UFUNCTION(BlueprintCallable, Category = Health)
+	void SetHealth(int newHealth);
+	UFUNCTION(BlueprintCallable, Category = Health)
+	void GetHit(int damage);
+	UPROPERTY(BlueprintReadOnly)
+	int damageDealt{1};
 
+	
+	UPROPERTY(EditInstanceOnly,BlueprintReadOnly, Category = EffectStuffs)
+	float damageUpBuffer{10};
+	UPROPERTY(EditInstanceOnly,BlueprintReadOnly, Category = EffectStuffs)
+	float speedUpBuffer{10};
+	UPROPERTY(BlueprintReadOnly, Category = EffectStuffs)
+	float damageUpTimer{damageUpBuffer};
+	UPROPERTY(BlueprintReadOnly, Category = EffectStuffs)
+	float speedUpTimer{speedUpBuffer};
+	UPROPERTY(EditInstanceOnly,BlueprintReadOnly, Category = EffectStuffs)
+	float SpeedUp{1.5};
+private:
+	float invTimer{0};
+	float invBuffer{.5};
+	bool isInv{false};
+	int defaultDamage{1};
+	float defaultSpeed{600};
 
+	bool ExtraPaused{ false };
+
+	
+	
 public:
 	//effect stuffs
+
+	UPROPERTY(EditAnywhere, Category = EffectStuffs)
+		int health;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
+		bool StrengthEffect;
+
+	class UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
 		bool SpeedEffect;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = EffectStuffs)
-		bool AttackUpEffect;
-
-
-	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
-		void IncreaseHealth();
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
 		void IncreaseSpeed();
 
 	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
 		void IncreaseDamage();
-
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+			float GetSpeedTimer();
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+			float GetDamageTimer();
 	//player stats
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
-		float MovementSpeed;
+		float  MovementSpeed;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
 		float AttackDamage;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerStats)
-		float PlayerHealth;*/
-
-	//player default stats
+		//player default stats
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefaultStats)
 		float DefaultDamage = 25;
 
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerDefStats)
-		float MaxHealth = 100;*/
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void PauseGame();
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void EndGame(int CurrentScore);
+
+	UFUNCTION(BlueprintCallable, Category = EffectStuffs)
+		void UnExtraPause();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widget")
+		void ShowWin();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Widget")
+		void ShowLoss();
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HighScore")
+		int TotScore {0};
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "HighScore")
+		int HighScoreCurrent;
+
+	UFUNCTION(BlueprintCallable, Category = "HighScore")
+		void UpdateGameScore(int newScore);
+
+	UFUNCTION(BlueprintCallable, Category = "Highscore")
+		int GetHighScore();
+
+	UFUNCTION(BlueprintCallable, Category = "Highscore")
+		int GetScore();
+
+	UFUNCTION(BlueprintCallable, Category = "HighScore")
+		void KillPlayer();
 };
 

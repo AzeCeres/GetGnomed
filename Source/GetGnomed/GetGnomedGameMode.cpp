@@ -2,6 +2,7 @@
 
 #include "GetGnomedGameMode.h"
 #include "GetGnomedCharacter.h"
+#include "Kismet/GameplayStatics.h"
 #include "UObject/ConstructorHelpers.h"
 
 AGetGnomedGameMode::AGetGnomedGameMode()
@@ -11,18 +12,42 @@ AGetGnomedGameMode::AGetGnomedGameMode()
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnClassFinder(TEXT("/Game/FirstPerson/Blueprints/BP_FirstPersonCharacter"));
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
-	GameState = false;
+	PrimaryActorTick.bCanEverTick = true;
+
+	GameRunState = false;
 	ControllerWinBool = false;
+	
+	if (OptionsString=="?true"){
+		isNight = true;
+	}
 }
 
 void AGetGnomedGameMode::Tick(float DeltaTime)
 {
-	while(GameState)
+	while (GameRunState)
 	{
 		GameTimeScore++;
 	}
+}
 
-	//wave controller stuff, eg. check for enemy count and spawn waves accordingly
+void AGetGnomedGameMode::StartGame()
+{
+	GameRunState = true;
+	WaveSpawner.Init(nullptr, 0);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveSpawner::StaticClass(), WaveSpawner);
+	WaveController.Init(nullptr, 0);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AWaveController::StaticClass(), WaveController);
+	
+}
+
+FString AGetGnomedGameMode::GetOptions()
+{
+	return OptionsString;
+}
+
+FString AGetGnomedGameMode::ParseOption(const FString& OptionString, const FString& OptionName)
+{
+	return ParseOption(OptionString,OptionName);
 }
 
 void AGetGnomedGameMode::TriggerWin()
@@ -30,11 +55,14 @@ void AGetGnomedGameMode::TriggerWin()
 	if (ControllerWinBool)
 	{
 		//show result of win
-	} else
+		UE_LOG(LogTemp, Warning, TEXT("You Win!"));
+	}
+	else
 	{
 		//show result of loss
+		UE_LOG(LogTemp, Warning, TEXT("You Lose!"));
 	}
 
-	GameState = false;
+	GameRunState = false;
 	//save GameTimeScore and GameScore
 }

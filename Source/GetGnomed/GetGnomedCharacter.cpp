@@ -1,5 +1,5 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
-
+// Edited and added onto by Julian&co
 #include "GetGnomedCharacter.h"
 #include "GetGnomedProjectile.h"
 #include "Animation/AnimInstance.h"
@@ -7,20 +7,18 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "SaveGameHS.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
 // AGetGnomedCharacter
-
 AGetGnomedCharacter::AGetGnomedCharacter()
 {
 	// Character doesnt have a rifle at start
 	bHasRifle = false;
-
-	//PlayerHealth = MaxHealth; Working on health pickup and realized im not really supposed to be implementing health, leaving this here though...
-	MovementSpeed = 1;
-	AttackDamage = DefaultDamage;
-
+	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 		
@@ -38,7 +36,9 @@ AGetGnomedCharacter::AGetGnomedCharacter()
 	Mesh1P->CastShadow = false;
 	//Mesh1P->SetRelativeRotation(FRotator(0.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-30.f, 0.f, -150.f));
-
+	
+	MovementSpeed = 1;
+	AttackDamage = DefaultDamage;
 }
 
 void AGetGnomedCharacter::BeginPlay()
@@ -54,7 +54,25 @@ void AGetGnomedCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	//SetHasRifle(true);
 
+	health = 5;
+}
+
+void AGetGnomedCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	invTimer += DeltaSeconds;
+	speedUpTimer += DeltaSeconds;
+	damageUpTimer += DeltaSeconds;
+	isInv = invTimer < invBuffer ? true : false;
+	StrengthEffect = damageUpTimer < damageUpBuffer ? true : false;
+	SpeedEffect = speedUpTimer < speedUpBuffer ? true : false;
+	if (health <=0)
+		isDead = true;
+	damageDealt=StrengthEffect ? defaultDamage*2 : defaultDamage;
+	CharacterMovement->MaxWalkSpeed = SpeedEffect ? defaultSpeed * SpeedUp : defaultSpeed;
+	
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -65,44 +83,69 @@ void AGetGnomedCharacter::SetupPlayerInputComponent(class UInputComponent* Playe
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		//Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		//EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		//Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AGetGnomedCharacter::Move);
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AGetGnomedCharacter::Look);
+
+		EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &AGetGnomedCharacter::PauseGame);
 	}
 }
 
-void AGetGnomedCharacter::IncreaseHealth()
+int AGetGnomedCharacter::GetHealth(){
+	return health;
+}
+
+void AGetGnomedCharacter::SetHealth(int newHealth){
+	health = newHealth;
+	if (health>maxHealth)
+		health=maxHealth;
+}
+
+void AGetGnomedCharacter::GetHit(int damage)
 {
-	/*if (PlayerHealth<MaxHealth) {
-		//health += 25;
-		//call destructor for health pickup item
-	}*/
+	if (isInv)
+		return;
+	health -= damage;
+	invTimer=0;
+
+	if (health <= 0)
+	{
+		isDead = true;
+		EndGame(TotScore);
+	}
 }
 
 void AGetGnomedCharacter::IncreaseSpeed()
 {
-	if (!SpeedEffect){
-		MovementSpeed = 1.5;
-		//wait for set time
-		MovementSpeed = 1;
-		//Call destructor for pickup item
-	}
+	//MovementSpeed = NewSpeed;
+	speedUpTimer = 0;
+	//float WalkSpeed = CharacterMovement->MaxWalkSpeed;
+	//CharacterMovement->MaxWalkSpeed = 600.f * NewSpeed;
+	//CharacterMovement->MaxFlySpeed = 600.f * NewSpeed;
+	//CharacterMovement->GroundFriction = 8.f/NewSpeed;
+
+
+	//Cast(GetMovementComponent())->MaxWalkSpeed = 100.0f*NewSpeed;
 }
 
 void AGetGnomedCharacter::IncreaseDamage()
 {
-	if (!AttackUpEffect)
-	{
-		AttackDamage *= 2;
-		//wait for set time
-		AttackDamage = DefaultDamage;
-		////Call destructor for pickup item
-	}
+	damageUpTimer=0;
+}
+
+float AGetGnomedCharacter::GetSpeedTimer()
+{
+	return speedUpTimer;
+}
+
+float AGetGnomedCharacter::GetDamageTimer()
+{
+	return damageUpTimer;
 }
 
 
@@ -114,8 +157,8 @@ void AGetGnomedCharacter::Move(const FInputActionValue& Value)
 	if (Controller != nullptr)
 	{
 		// add movement 
-		AddMovementInput(GetActorForwardVector(), MovementVector.Y/* *MovementSpeed ??*/);
-		AddMovementInput(GetActorRightVector(), MovementVector.X/* *MovementSpeed ??*/);
+		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
+		AddMovementInput(GetActorRightVector(), MovementVector.X);
 	}
 }
 
@@ -140,4 +183,84 @@ void AGetGnomedCharacter::SetHasRifle(bool bNewHasRifle)
 bool AGetGnomedCharacter::GetHasRifle()
 {
 	return bHasRifle;
+}
+
+
+void AGetGnomedCharacter::PauseGame()
+{
+	if (!ExtraPaused)
+	{
+		GetWorld()->GetFirstPlayerController()->Pause();
+	}
+}
+
+void AGetGnomedCharacter::EndGame(int CurrentScore)
+{
+	ExtraPaused = true;
+	GetWorld()->GetFirstPlayerController()->Pause();
+
+
+	// Create instance of savegame class
+	USaveGameHS* SaveGameInstance = Cast<USaveGameHS>(UGameplayStatics::CreateSaveGameObject(USaveGameHS::StaticClass()));
+	if (UGameplayStatics::DoesSaveGameExist("MySlot", 0))
+	{
+		SaveGameInstance = Cast<USaveGameHS>(UGameplayStatics::LoadGameFromSlot("MySlot", 0));
+	}
+	HighScoreCurrent = SaveGameInstance->HighScore;
+	if (CurrentScore > HighScoreCurrent)
+	{
+		SaveGameInstance->HighScore = CurrentScore;
+		UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("MySlot"), 0);
+	}
+
+	if(isDead)
+	{
+		ShowLoss();
+	} else
+	{
+		ShowWin();
+	}
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Total Score: %i"), CurrentScore));
+	if(GEngine)GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("High Score: %i"), SaveGameInstance->HighScore));
+
+}
+
+void AGetGnomedCharacter::UnExtraPause()
+{
+	ExtraPaused = false;
+	isDead = false;
+	PauseGame();
+}
+
+void AGetGnomedCharacter::UpdateGameScore(int newScore)
+{
+	TotScore = newScore;
+}
+
+int AGetGnomedCharacter::GetHighScore()
+{
+	return HighScoreCurrent;
+}
+
+int AGetGnomedCharacter::GetScore()
+{
+	return TotScore;
+}
+
+void AGetGnomedCharacter::KillPlayer()
+{
+	if (!ExtraPaused)
+	{
+		isDead = true;
+		EndGame(TotScore);
+	}
+
+}
+
+void AGetGnomedCharacter::ShowLoss_Implementation()
+{
+}
+
+void AGetGnomedCharacter::ShowWin_Implementation()
+{
 }
